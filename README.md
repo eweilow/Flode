@@ -1,4 +1,4 @@
-![flode logo](images/flode.svg)
+![flode logo](images/flode.png)
 
 #What is flode?
 Flode is currently in development.
