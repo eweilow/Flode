@@ -1,6 +1,7 @@
 doctype html
 
 mixin navbar()
+  -var items = {"Home": "/", "Upload": "/upload", "Browse": "/browse"}
   nav.navbar.navbar-inverse.navbar-fixed-top
       .container
         .navbar-header
@@ -9,15 +10,12 @@ mixin navbar()
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.navbar-brand(href='#') WaterTank
+          a.navbar-brand(href='/') WaterTank
         #navbar.collapse.navbar-collapse
           ul.nav.navbar-nav
-            li.active
-              a(href='#') Home
-            li
-              a(href='#about') Upload
-            li
-              a(href='#contact') Browse
+            each key, item in items
+              li(class=activePage===key?"active":"")
+                a(href=key)= item
 
 html(lang='en')
   head
@@ -29,7 +27,7 @@ html(lang='en')
     meta(name='description', content='')
     meta(name='author', content='')
     link(rel='icon', href='../../favicon.ico')
-    title Starter Template for Bootstrap
+    title WaterTank - #{pagetitle}
     // Bootstrap core CSS
     link(href='/bootstrap/css/bootstrap.min.css', rel='stylesheet')
     // Custom styles for this template

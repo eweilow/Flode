@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  style.
+    img {max-width: 250px; margin: 5px; display: inline-block; max-height: 500px; }
+    
+  .row
+    
+  h1 Media gallery
+  
+  each file in files
+    if file.indexOf(".png") > 0
+      img(src=file)
+    else if file.indexOf(".jpg") > 0
+      img(src=file)
