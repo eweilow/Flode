@@ -9,7 +9,16 @@ block content
   h1 Media gallery
   
   each file in files
-    if file.indexOf(".png") > 0
+    if file.toLowerCase().indexOf(".png") > 0
       img(src=file)
-    else if file.indexOf(".jpg") > 0
+    else if file.toLowerCase().indexOf(".jpg") > 0
       img(src=file)
+    else if file.toLowerCase().indexOf(".mov") > 0
+      video(width="250", height="250", controls)
+        source(src=file, type="video/quicktime")
+        Your browser does not like this video.
+    else if file.toLowerCase().indexOf(".mp4") > 0
+      video( width="250", height="250", controls)
+        source(src=file, type="video/mp4")
+        Your browser does not like this video.
+
