@@ -1,7 +1,7 @@
 ![flode logo](images/flode.png)
 
 #What is flode?
-Flode is currently in development.
+Flode is a framework for sharing pictures on a local wifi hotspot.
 
 #Running flode
 To run Flode you are going to need `node` and `npm`, both of which can be found for your operating system of choice [on nodejs.org](https://nodejs.org).
