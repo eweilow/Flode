@@ -13,6 +13,8 @@ block content
       img(src=file)
     else if file.toLowerCase().indexOf(".jpg") > 0
       img(src=file)
+    else if file.toLowerCase().indexOf(".bmp") > 0
+      img(src=file)
     else if file.toLowerCase().indexOf(".mov") > 0
       video(width="250", height="250", controls)
         source(src=file, type="video/quicktime")
