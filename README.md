@@ -14,3 +14,10 @@ npm start
 ```
 
 This will start a web server running Flode at `http://localhost:3000`
+
+#The plan
+* Creating logins
+* Logging in
+* Moderating pictures
+* Deleting pictures
+* Picture tags
