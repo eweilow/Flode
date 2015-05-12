@@ -33,6 +33,9 @@ html(lang='en')
     link(href='/bootstrap/css/bootstrap.min.css', rel='stylesheet')
     // Custom styles for this template
     link(href='/stylesheets/style.css', rel='stylesheet')
+    script(src='/js/jquery.min.js')
+    script(src='/bootstrap/js/bootstrap.min.js')
+    block js
     
   body
     +navbar()
@@ -40,6 +43,4 @@ html(lang='en')
       .starter-template
         block content
         
-    script(src='/js/jquery.min.js')
-    script(src='/bootstrap/js/bootstrap.min.js')
 

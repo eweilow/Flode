@@ -1,11 +1,13 @@
 extends layout
 
+block js
+  script(src="/js/websock.js")
+
 block content
   style.
     img {max-width: 250px; margin: 5px; display: inline-block; max-height: 500px; }
-    
-  .row
-    
+  
+  p(role="alert").alert.alert-danger#connectionstatus LIVE UPDATE: Not connected to server
   h1 Media gallery
   
   each file in files

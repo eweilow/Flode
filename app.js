@@ -34,8 +34,8 @@ app.use(function (req, res, next) {
 });
 
 app.use('/', indexRoute);
-app.use('/upload', uploadRoute);
-app.use('/browse', browseRoute);
+app.use('/upload', uploadRoute.router);
+app.use('/browse', browseRoute.router);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -69,4 +69,59 @@ app.use(function(err, req, res, next) {
 });
 
 
-module.exports = app;
+module.exports.app = app;
+module.exports.initWebsocket = function (httpServer) {
+  var websocket = require("websocket");
+
+  var WebSocketServer = websocket.server;
+
+  var wsServer = new WebSocketServer({
+    httpServer: httpServer,
+    autoAcceptConnections: false
+  });
+  
+  var conns = [ ];
+  // Create a callback to handle each connection request
+  wsServer.on('request', function (request) {
+    var connection = request.accept();
+    console.log((new Date()) + ' Connection accepted from ' + request.origin);
+
+    conns.push(connection);
+   /*
+    // Callback to handle each message from the client
+    connection.on('message', function (message) {
+      if (message.type === 'utf8') {
+        console.log('Received Message: ' + message.utf8Data);
+        connection.sendUTF(message.utf8Data);
+      }
+      else if (message.type === 'binary') {
+        console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
+        connection.sendBytes(message.binaryData);
+      }
+    });*/
+   
+    // Callback when client closes the connection
+    connection.on('close', function (reasonCode, description) {
+      console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+    });
+  });
+  
+  var allowed = [".png", ".jpg", ".bmp", ".mov", ".mp4"];
+  
+  uploadRoute.callback(function (path) {
+    var hit = false;
+    for (var index = 0; index < allowed.length; index++) {
+      var element = allowed[index];
+      if (path.toLowerCase().indexOf(element) > 0) hit = true;
+    }
+    if (!hit) return console.log("Unallowed extension for path", path);
+    
+    for (var index = 0; index < conns.length; index++) {
+      var element = conns[index];
+      
+      if(path.toLowerCase().indexOf(".mov") > 0 || path.toLowerCase().indexOf(".mp4") > 0)
+      element.sendUTF(JSON.stringify({ "type": "picture", "path": path }));
+    }
+    
+  });
+};
