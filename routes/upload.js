@@ -5,10 +5,19 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   res.render('upload.jade', { pagetitle: "Upload" });
 });
+
+
+var fs = require("fs");
+var files = fs.existsSync("./meta.json") ? JSON.parse(fs.readFileSync("./meta.json")) : [];
+
 router.post('/',function(req,res){
   //if(done==true){
-  console.log(req.files);
+  
+  files.push({ path: "/"+req.files.media.name, title: req.body.title, description: req.body.descr, tags: req.body.tags.split(",") });
+  console.log(files);
   res.redirect("/browse");
+  
+  fs.writeFileSync("./meta.json", JSON.stringify(files));
     
     for (var index = 0; index < funcs.length; index++) {
       var element = funcs[index];

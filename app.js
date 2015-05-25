@@ -109,6 +109,7 @@ module.exports.initWebsocket = function (httpServer) {
   var allowed = [".png", ".jpg", ".bmp", ".mov", ".mp4"];
   
   uploadRoute.callback(function (path) {
+    console.log("sending for path", path);
     var hit = false;
     for (var index = 0; index < allowed.length; index++) {
       var element = allowed[index];
@@ -116,11 +117,18 @@ module.exports.initWebsocket = function (httpServer) {
     }
     if (!hit) return console.log("Unallowed extension for path", path);
     
+    var json = "";
+    if (path.toLowerCase().indexOf(".mov") > 0 || path.toLowerCase().indexOf(".mp4") > 0)
+      json = JSON.stringify({ "type": "movie", "path": path });
+    else
+      json = JSON.stringify({ "type": "picture", "path": path });
+      
     for (var index = 0; index < conns.length; index++) {
       var element = conns[index];
       
-      if(path.toLowerCase().indexOf(".mov") > 0 || path.toLowerCase().indexOf(".mp4") > 0)
-      element.sendUTF(JSON.stringify({ "type": "picture", "path": path }));
+    
+      
+      element.sendUTF(json);
     }
     
   });

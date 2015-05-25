@@ -9,10 +9,19 @@ var start = function () {
 
   websocket.onmessage = function (event) {
     var data = JSON.parse(event.data);
+    console.log(data);
     if (data.type === "picture") {
       var $img = $("<img>");
       $img.attr("src", data.path);
-      $img.appendTo($(".starter-template"));
+      $img.prependTo($(".files"));
+    }
+    else if (data.type === "movie") {
+      var $vid = $("<video>");
+      $vid.attr("width", 250);
+      $vid.attr("height", 250);
+      $vid.attr("controls", true);
+      $("<source>").attr("src", data.path).attr("type", "video/mp4").appendTo($vid);
+      $vid.prependTo($(".files"));
     }
   }
  

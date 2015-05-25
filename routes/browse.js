@@ -5,8 +5,14 @@ var path = require("path");
 
 /* GET upload page. */
 router.get('/', function (req, res, next) {  
-  var files = fs.readdirSync(path.resolve("./uploads"));
+  var files = fs.existsSync("./meta.json") ? JSON.parse(fs.readFileSync("./meta.json")) : [];
   res.render('browse.jade', { pagetitle: "Browse", files: files });
+});
+
+/* GET upload page. */
+router.get('/:id', function (req, res, next) {  
+  var files = fs.existsSync("./meta.json") ? JSON.parse(fs.readFileSync("./meta.json")) : [];
+  res.render('media.jade', { pagetitle: "Media", file: files[req.params.id] });
 });
 
 
