@@ -3,10 +3,10 @@ extends includes/layout.jade
 mixin background(path)
   div(style="background-image: url('" + path + "')").media
   
-mixin media(file,k)
-  a(href="/browse/"+k).outer-wrapper.waves-effect.waves-light.z-depth-1
-    if file.thumb.toLowerCase().indexOf(".png") > 0 || file.thumb.toLowerCase().indexOf(".jpg") > 0 || file.thumb.toLowerCase().indexOf(".bmp") > 0
-      +background(file.thumb)
+mixin media()
+  .outer-wrapper
+    if file.path.toLowerCase().indexOf(".png") > 0 || file.path.toLowerCase().indexOf(".jpg") > 0 || file.path.toLowerCase().indexOf(".bmp") > 0
+      +background(file.path)
     else if file.path.toLowerCase().indexOf(".mov") > 0
       .media
         video(controls).responsive-video
@@ -17,11 +17,9 @@ mixin media(file,k)
         video(controls).responsive-video
           source(src=file.path, type="video/mp4")
           Your browser does not like this video.
-           
-block content 
-  .container
-    h1 Media Gallery
-  .row.smallPadding
-    each file,k in files
-      .col.s6.m4.l2.row.smallMargin
-        +media(file,k)
+          
+block content
+  .container.row
+    .col.l6.m12.s12.offset-l3.topMargin.margin-l.z-depth-1.noPadding
+      +media()
+    
