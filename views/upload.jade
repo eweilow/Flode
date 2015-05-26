@@ -1,0 +1,35 @@
+extends includes/layout.jade
+
+block content
+  script.
+    $(document).ready(function(){
+      $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+      });
+    });
+    
+  .container.row
+    .col.s12.l6.offset-l3.z-depth-1.row.topMargin.margin-l
+      form(enctype="multipart/form-data", action="/upload", method="post").col.l10.offset-l1.uploadForm
+        .center-align.l12
+          i.mdi-file-cloud-upload.large
+        .row
+          .input-field.col.s12
+            label(for="title") Title
+            input(type="text", name="title", length=25).validate#title
+          .input-field.col.s12
+            input(type="text", name="tags", placeholder="Comma-separated tags", length=100)#tags
+          .input-field.col.s12
+            textarea(type="text", name="descr", placeholder="Description", length=1000).materialize-textarea
+          .input-field.col.s12
+            i.mdi-device-access-time.prefix
+            input(type="date", name="date", placeholder="From when is this?").datepicker
+        .file-field.input-field.col.s12
+          input(type="text").file-path.validate
+          .btn
+            span File
+            input(type="file", name="media")
+        .row
+          .input-field.col.s12
+            button(type="submit", value="Upload", name="submit").btn.btn-default Submit
