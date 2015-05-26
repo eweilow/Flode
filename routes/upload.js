@@ -13,7 +13,7 @@ var files = fs.existsSync("./meta.json") ? JSON.parse(fs.readFileSync("./meta.js
 router.post('/',function(req,res){
   //if(done==true){
   
-  files.push({ path: "/"+req.files.media.name, title: req.body.title, description: req.body.descr, tags: req.body.tags.split(",") });
+  files.push({ path: "/"+req.files.media.name, title: req.body.title, description: req.body.descr, date: req.body.date, tags: req.body.tags.split(",") });
   console.log(files);
   res.redirect("/browse");
   

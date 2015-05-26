@@ -1,0 +1,17 @@
+mixin links()
+  -var l = {"/upload": "Upload", "/browse": "Browse"}
+  each title, href in l
+    li
+      a(href=href).waves-effect.waves-light= title
+      
+nav.amber(role='navigation')
+  .nav-wrapper.container
+    a#logo-container.waves-effect.waves-light.brand-logo(href='/') Flode
+    
+    ul.right.hide-on-med-and-down
+      +links()
+    ul#nav-mobile.side-nav
+      +links()
+      
+    a.button-collapse(href='#', data-activates='nav-mobile')
+      i.mdi-navigation-menu
