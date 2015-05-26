@@ -2,46 +2,32 @@ extends includes/layout.jade
 
 -var is
 
+mixin background(path)
+  div(style="background-image: url('" + path + "')").media
+  
 mixin media(file,k)
-  a(href="/browse/"+k)
-  if file.path.toLowerCase().indexOf(".png") > 0
-    img(src=file.path).media
-  else if file.path.toLowerCase().indexOf(".jpg") > 0
-    img(src=file.path).media
-  else if file.path.toLowerCase().indexOf(".bmp") > 0
-    img(src=file.path).media
-  else if file.path.toLowerCase().indexOf(".mov") > 0
-    video(controls).media.responsive-video
-      source(src=file.path, type="video/quicktime")
-      Your browser does not like this video.
-  else if file.path.toLowerCase().indexOf(".mp4") > 0
-    video(controls).media.responsive-video
-      source(src=file.path, type="video/mp4")
-      Your browser does not like this video.
+  a(href="/browse/"+k).outer-wrapper.waves-effect.waves-light.z-depth-1
+    if file.thumb.toLowerCase().indexOf(".png") > 0 || file.thumb.toLowerCase().indexOf(".jpg") > 0 || file.thumb.toLowerCase().indexOf(".bmp") > 0
+      +background(file.thumb)
+    else if file.path.toLowerCase().indexOf(".mov") > 0
+      .media
+        video(controls).responsive-video
+          source(src=file.path, type="video/quicktime")
+          Your browser does not like this video.
+    else if file.path.toLowerCase().indexOf(".mp4") > 0
+      .media
+        video(controls).responsive-video
+          source(src=file.path, type="video/mp4")
+          Your browser does not like this video.
            
 block content
   style.
-    .media { height: 100%; width: initial; position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); }
-    .card .card-image img { width: initial !important;  position: absolute; top: 50% !important; left: 50% !important;  }
-    .card-image { display: inline-block; overflow: hidden; width: 100%; padding-bottom: 100%; height: 0; }
-    
-    .card-title { width: 100%; }
-    
-    .inner { position: absolute; top: 0; left: 0; display: block; height: 100%; width: 100%; }
-    .responsive-video { height: 100%; }
+    .outer-wrapper { display: inline-block;width: 100%; padding-bottom: 100%; height: 0; position: relative;  }
+    .media { display: block; width: 100%; height: 100%; position: absolute; top: 0; left: 0; background-size: cover; }
   
   .container
     h1 Media Gallery
-  .row
+  .row.smallPadding
     each file,k in files
-      .col.s6.m4.l2.row
-        .card
-          .card-image
-            .inner
-              +media(file,k)
-            span.card-title= file.title
-          .card-content
-            p= file.description
-          .card-action
-            each tag in file.tags
-              a(href="/")= tag
+      .col.s6.m4.l2.row.smallMargin
+        +media(file,k)
