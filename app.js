@@ -36,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public_media')));
 
 app.use(function (req, res, next) {
   res.locals.activePage = req.path;
+  
   next();
 });
 

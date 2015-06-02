@@ -16,6 +16,7 @@
     "morgan": "~1.5.1",
     "multer": "^0.1.8",
     "serve-favicon": "~2.2.0",
-    "websocket": "^1.0.18"
+    "websocket": "^1.0.18",
+    "node-file-distribute": "eweilow/node-file-distribute"
   }
 }
