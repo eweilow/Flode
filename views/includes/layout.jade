@@ -26,4 +26,9 @@ html(lang='en')
               a(href="/browse") Browse
             li
               a(href="/upload") Upload
+          if user
+            .user= user.username + " | "
+              a(href="/logout") Log out
+          else 
+            a(href="/login").user Log in
       block content

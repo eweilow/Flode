@@ -42,11 +42,14 @@ nav {
   width: 100%;
   background: #549ed8;
   color: rgba(255,255,255,0.9);
+  .box-sizing(border-box);
+  
+  a { color: rgba(255,255,255,0.7); text-decoration: none; &:hover { color: rgba(255,255,255,0.9); } }
   
   .shadow { .box-shadow(-10px 0 5px black); }
   
   padding-left: @title-size;
-  .title { font-size: 32px; font-weight: 300; text-align: center; position: absolute; top: 0; left: 0; width: @title-size; height: 100%; line-height: @nav-height; margin: 0; }
+  .title { color: rgba(255,255,255,0.9); text-decoration: none; font-size: 32px; font-weight: 300; text-align: center; position: absolute; top: 0; left: 0; width: @title-size; height: 100%; line-height: @nav-height; margin: 0; }
   
   ul {
     padding: 0;
@@ -69,6 +72,15 @@ nav {
         }
       }
     }
+  }
+  .user {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-right: 10px;
+    height: @nav-height;
+    line-height: @nav-height;
   }
 }
 
@@ -114,6 +126,7 @@ ul.grid {
   }
 }
 
+.media { width: 200px; height: 200px; background-size: cover; }
 .green { 
   background: limegreen;
 }

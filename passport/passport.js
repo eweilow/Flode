@@ -105,6 +105,7 @@ module.exports.init = function (app, file) {
   app.use(passport.session());
   
   app.use(function (req, res, next) {
+    res.locals.user = req.user;
     req.is = function (what) {
       return req.user && req.user.roles.indexOf(what) >= 0;
     };
@@ -121,7 +122,7 @@ module.exports.init = function (app, file) {
       if (!user) { return res.render('login', { reason: "Invalid username or password." }); }
       req.logIn(user, function (err) {
         if (err) { return next(err); }
-        return req.body.redirect ? res.redirect(req.body.redirect) : res.redirect('/users/' + user.username);
+        return req.body.redirect ? res.redirect(req.body.redirect) : res.redirect("/");
       });
     })(req, res, next);
   });
@@ -132,7 +133,7 @@ module.exports.init = function (app, file) {
   
   app.get('/logout', function(req, res) {
     req.logout();
-    res.redirect('/');
+    res.redirect("/");
   });
 
 };
