@@ -32,7 +32,7 @@ body, html { min-height: 100% !important; width: 100%; padding: 0; margin: 0 !im
 @title-size: 120px;
 body { position: relative; overflow-x: hidden;  }
 body.navbody { padding-top: @nav-height; }
-body.indexbody { .box-sizing(border-box); padding-top: @nav-height;}
+body.indexbody { .box-sizing(border-box); padding-top: @nav-height; position: absolute; top: 0; left: 0; height: 100%; width: 100%; }
 nav {
   z-index: 100;
   height: @nav-height;
@@ -72,7 +72,7 @@ nav {
   }
 }
 
-.indexnav { background: rgba(100,100,100,1.0); color: white; text-align: middle;
+.indexnav { background: rgba(150,150,150,1.0); color: white; text-align: middle;
   padding: 0;
   .title { padding: 0; width: 100%; }
 }
@@ -83,6 +83,7 @@ nav {
   left: 0;
   height: 100%;
   width: 100%;
+  overflow: hidden;
   padding-top: @nav-height;
   .box-sizing(border-box); 
 }
@@ -108,7 +109,7 @@ ul.grid {
       position: absolute;
       top: 50%;
       left: 50%;
-      .translate(-25%, -25%);
+      .translate(-50%, -50%);
     }
   }
 }
@@ -123,5 +124,5 @@ ul.grid {
   background: orange;
 }
 .blue { 
-  background: cornflowerblue;
+  background: rgb(135, 159, 237);
 }
