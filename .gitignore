@@ -32,3 +32,6 @@ meta.json
 public_media/
 
 public/style.css
+
+.session/
+public/style.css

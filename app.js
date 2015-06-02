@@ -1,4 +1,6 @@
 var express = require('express');
+
+var session = require("express-session");
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -34,11 +36,17 @@ app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public_media')));
 
+var SessStore = require("./sessionstore")(session);
+app.use(session({ secret: "verytopsecret", saveUninitialized: true, resave: false, store: new SessStore({ directory: ".session" }) })); // Session middleware
+
+
 app.use(function (req, res, next) {
   res.locals.activePage = req.path;
   
   next();
 });
+
+require("./passport/passport.js").init(app);
 
 app.use('/', indexRoute);
 app.use('/upload', uploadRoute.router);

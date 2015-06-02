@@ -1,9 +1,10 @@
-/// <reference path="../typings/node/node.d.ts"/>
 var express = require('express');
 var router = express.Router();
 
 /* GET upload page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
+  if (!req.is("user")) { return res.render('login', { reason: "You need to be logged in", redirect: req.originalUrl }); }
+  
   res.render('upload.jade', { pagetitle: "Upload" });
 });
 
@@ -15,6 +16,7 @@ var gm = require('gm');
 var path = require("path");
 
 router.post('/', function (req, res, next) {
+  if (!req.is("user")) { return res.render('login', { reason: "You need to be logged in" }); }
   //if(done==true){
   
   var filepath = req.files.media.name;
