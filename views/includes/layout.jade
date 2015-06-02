@@ -15,14 +15,15 @@ html(lang='en')
     block meta
     block css
     block js
-
-  body
-    block nav
-      nav
-        h1.title Flode
-        ul
-          li
-            a(href="/browse") Browse
-          li
-            a(href="/upload") Upload
-    block content
+  
+  block fullbody
+    body.navbody
+      block nav
+        nav
+          a(href="/").title Flode
+          ul
+            li
+              a(href="/browse") Browse
+            li
+              a(href="/upload") Upload
+      block content

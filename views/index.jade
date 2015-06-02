@@ -1,12 +1,24 @@
 extends includes/layout.jade
 
-block content
-  ul.grid
-    li.gridItem
-      | Upload
-    li.gridItem
-      | Browse
-    li.gridItem
-      | User
-    li.gridItem
-      | Settings
+block fullbody
+  body.indexbody
+    nav.indexnav
+      h1.title.center Flode
+    .wrapper
+      ul.grid
+        li.gridItem.green
+          a(href="/upload")
+            .inner
+              | Upload
+        li.gridItem.blue
+          a(href="/browse")
+            .inner
+              | Browse
+        li.gridItem.orange
+          a(href="/user")
+            .inner
+              | User
+        li.gridItem.red
+          a(href="/settings")
+            .inner
+              | Settings
