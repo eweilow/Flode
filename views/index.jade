@@ -4,6 +4,12 @@ block fullbody
   body.indexbody
     nav.indexnav
       h1.title.center Flode
+      if user
+        .user= user.username + " | "
+          a(href="/logout") Log out
+      else 
+        a(href="/login").user Log in
+        
     .wrapper
       ul.grid
         li.gridItem.green

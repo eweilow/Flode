@@ -1,31 +1,106 @@
 
 var LocalStrategy = require('passport-local').Strategy;
 var bCrypt = require('bcrypt-nodejs');
+var fs = require("fs");
+var id = 2;
+var users = [];
 
-var users = {};
+var adminUser = null;
+
+var byUsername = {};
+var byId = {};
+var byGroup = {};
+
 function getUser(username, callback) {
-  callback(null, { firstname: "t", lastname: "p", password: "$2a$10$3b261nsiV33W1kFLBatO3exwGsApvzFYrUWedcUGRSYEH8ZtGbCJK", username: username, roles: ["admin", "user"], id: 0 });
-}
-function getUserById(id, callback) {
-  callback(null, { firstname: "t", lastname: "p", password: "$2a$10$3b261nsiV33W1kFLBatO3exwGsApvzFYrUWedcUGRSYEH8ZtGbCJK", username: "wat", roles: ["admin", "user"], id: 0 });
-}
-function saveUser(username, data, callback) {
-  callback();
+  if (adminUser && username === adminUser.username) return callback(null, adminUser);
+  
+  if (!byUsername.hasOwnProperty(username)) return callback();
+  callback(null, byUsername[username]);
 }
 
-module.exports.init = function (app, file) {
+function getUserById(id, callback) {
+  if (adminUser && id === adminUser.id) return callback(null, adminUser);
   
-  var passport = require("passport");
+  if (!byId.hasOwnProperty(id)) return callback();
+  callback(null, byId[id]);
+}
+
+function saveUser(data, callback) {
+  if (byUsername.hasOwnProperty(data.username)) { return callback(new Error("Username already registered.")); }
+  
+  var user = { username: data.username, password: data.password, name: data.name, roles: data.roles, id: (data.id = id++) };
+  users.push(user);  
+  byUsername[user.username]  = user;
+  byId[user.id] = user;
+  
+  if (user.roles) {
+    user.roles.forEach(function (role) {
+      if (!byGroup.hasOwnProperty(role)) byGroup[role] = [];
+      byGroup[role].push(user);
+    });
+  }
+  save(callback);
+}
+
+function save(callback) {  
+  fs.writeFile("./users.json", JSON.stringify({ id: id, users: users }), function (err) {
+    if (err) return console.log(err);
+    if(callback) callback();
+  });
+}
+
+module.exports.init = function (app, file) {  
+  
+  var passport = require("passport");  
+  // Generates hash using bCrypt
+  var createHash = function (password) {
+    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+  };
+  
+  if (fs.existsSync("./users.json")) {
+    var data = { users: [], id: 2 };
+    var file = fs.readFileSync("./users.json");
+    try {
+      data = JSON.parse(file);
+    } catch(error) {
+      
+    }
+    users = data.users;
+    id = data.id;
+    
+    users.forEach(function (user) {
+      byId[user.id] = user;
+      byUsername[user.username] = user;
+      
+      if (user.roles) {
+        user.roles.forEach(function (role) {
+          if (!byGroup.hasOwnProperty(role)) byGroup[role] = [];
+          byGroup[role].push(user);
+        });
+      }
+    });
+  } else {
+    users = [];
+    id = 2;
+  }
+  
+  if (argv.admin && argv.password) {
+    adminUser = { id: 1, username: null, password: null, name: "Admin", roles: ["admin", "user"] };
+
+    adminUser.username = argv.admin;
+    adminUser.password = createHash(argv.password);
+  }
   
   passport.serializeUser(function (user, done) {
     done(null, user.id);
   });
+  save();
 
   passport.deserializeUser(function (id, done) {
     getUserById(id, function (err, result) {
       if (err) return done(err, false);
       if (!result) return done(null, false, { message: "Incorrect user id" });
-      var user = { firstname: result.firstname, lastname: result.lastname, roles: result.roles, username: result.username, id: result.id };
+      var user = { name: result.name, roles: result.roles, username: result.username, id: result.id };
 
       done(null, user);
     });
@@ -45,7 +120,7 @@ module.exports.init = function (app, file) {
           return done(null, false, { message: "Incorrect password" });
         }
 
-        var user = { firstname: result.firstname, lastname: result.lastname, username: result.username, roles: result.roles, id: result.id };
+        var user = { name: result.name, username: result.username, roles: result.roles, id: result.id };
         return done(null, user);
       });
     })
@@ -55,6 +130,8 @@ module.exports.init = function (app, file) {
     passReqToCallback: true // allows us to pass back the entire request to the callback
   },
     function (req, username, password, done) {
+      
+      if (!/\d+/g.test(username)) return done(null, false, { message: "Invalid username" });
       var findOrCreateUser = function () {
         // find a user in Mongo with provided username
         getUser(username, function (err, user) {
@@ -66,7 +143,7 @@ module.exports.init = function (app, file) {
           // already exists
           if (user) {
             console.log('User already exists with username: ' + username);
-            return done(null, false, req.flash('message', 'User Already Exists'));
+            return done(null, false, { message: "Username already registered." });
           } else {
             // if there is no user with that email
             // create the user
@@ -74,12 +151,11 @@ module.exports.init = function (app, file) {
             // set the user's local credentials
             newUser.username = username;
             newUser.password = createHash(password);
-            newUser.email = req.param('email');
-            newUser.firstName = req.param('firstName');
-            newUser.lastName = req.param('lastName');
+            newUser.name = req.param('name');
+            newUser.roles = ["unvalidated"];
 
             // save the user
-            saveUser(username, newUser, function (err) {
+            saveUser(newUser, function (err) {
               if (err) {
                 console.log('Error in Saving user: ' + err);
                 throw err;
@@ -96,10 +172,6 @@ module.exports.init = function (app, file) {
     })
   );
 
-  // Generates hash using bCrypt
-  var createHash = function (password) {
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
-  };
   
   app.use(passport.initialize());
   app.use(passport.session());
@@ -107,7 +179,7 @@ module.exports.init = function (app, file) {
   app.use(function (req, res, next) {
     res.locals.user = req.user;
     req.is = function (what) {
-      return req.user && req.user.roles.indexOf(what) >= 0;
+      return req.user && req.user.roles && req.user.roles.indexOf(what) >= 0;
     };
     next();
   })
@@ -136,4 +208,19 @@ module.exports.init = function (app, file) {
     res.redirect("/");
   });
 
+  app.get('/register', function(req, res) {
+    res.render('register', { });
+  });
+  
+  app.post("/register", function (req, res, next) {
+    passport.authenticate('signup', function (err, user, info) {
+      if (err) { return next(err); }
+      if (!user) { return res.render('register', { reason: info, username: req.param('username'), name: req.param('name') }); }
+      req.logIn(user, function (err) {
+        if (err) { return next(err); }
+        return req.body.redirect ? res.redirect(req.body.redirect) : res.redirect("/");
+      });
+    })(req, res, next);
+  });
+  
 };

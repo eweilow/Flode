@@ -1,0 +1,13 @@
+extends includes/layout.jade
+
+block content
+  form(action="/register", method="post")
+    if reason && reason.message
+      p= reason.message
+    if redirect
+      input(type="hidden", name="redirect", value=redirect)
+    label Phone number
+    input(type="text", name="username", pattern="\+\d+", value=username, required)
+    input(type="password", name="password", value=password, required)
+    input(type="text", name="name", value=firstname, required)
+    input(type="submit")
