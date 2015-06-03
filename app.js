@@ -131,67 +131,7 @@ app.use(function(err, req, res, next) {
 });
 
 var initWebsocket = function (httpServer) {
-  var websocket = require("websocket");
 
-  var WebSocketServer = websocket.server;
-
-  var wsServer = new WebSocketServer({
-    httpServer: httpServer,
-    autoAcceptConnections: false
-  });
-  
-  var conns = [ ];
-  // Create a callback to handle each connection request
-  wsServer.on('request', function (request) {
-    var connection = request.accept();
-    console.log((new Date()) + ' Connection accepted from ' + request.origin);
-
-    conns.push(connection);
-   /*
-    // Callback to handle each message from the client
-    connection.on('message', function (message) {
-      if (message.type === 'utf8') {
-        console.log('Received Message: ' + message.utf8Data);
-        connection.sendUTF(message.utf8Data);
-      }
-      else if (message.type === 'binary') {
-        console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-        connection.sendBytes(message.binaryData);
-      }
-    });*/
-   
-    // Callback when client closes the connection
-    connection.on('close', function (reasonCode, description) {
-      console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-    });
-  });
-  
-  var allowed = [".png", ".jpg", ".bmp", ".mov", ".mp4"];
-  
-  uploadRoute.callback(function (path) {
-    console.log("sending for path", path);
-    var hit = false;
-    for (var index = 0; index < allowed.length; index++) {
-      var element = allowed[index];
-      if (path.toLowerCase().indexOf(element) > 0) hit = true;
-    }
-    if (!hit) return console.log("Unallowed extension for path", path);
-    
-    var json = "";
-    if (path.toLowerCase().indexOf(".mov") > 0 || path.toLowerCase().indexOf(".mp4") > 0)
-      json = JSON.stringify({ "type": "movie", "path": path });
-    else
-      json = JSON.stringify({ "type": "picture", "path": path });
-      
-    for (var index = 0; index < conns.length; index++) {
-      var element = conns[index];
-      
-    
-      
-      element.sendUTF(json);
-    }
-    
-  });
 };
 
 function normalizePort(val) {
