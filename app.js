@@ -72,7 +72,7 @@ app.disable("etag");
 require("./passport/passport.js").init(app);
 
 var cfg = require("file-distribute").config.readOrMake("./config/defaultnode.json", function () { 
-  return { port: 8081, host: "localhost", segmentation: 10, basepath: "./public_media", apikey: "" };
+  return { port: 8081, host: "localhost", segmentation: 10, basepath: "./public_media", apikey: "", allowedfiletypes: [] };
 });
 cfg = require("file-distribute").config.override(argv, cfg);
 
@@ -96,7 +96,7 @@ setInterval(function () {
 }, seconds * 1000);
 
 app.use('/', indexRoute);
-app.use('/upload', uploadRoute.router);
+app.use('/upload', uploadRoute.router(cfg.allowedfiletypes));
 app.use('/browse', browseRoute.router(app, node.repositories("offsite"), node.repositories("local")));
 
 // catch 404 and forward to error handler
