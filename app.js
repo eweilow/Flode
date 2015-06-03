@@ -148,6 +148,30 @@ var initWebsocket = function (httpServer) {
   });
 };
 
+var cfg = require("file-distribute").config.readOrMake("./config/defaultnode.json", function () { 
+  return { port: 8081, host: "localhost", segmentation: 10, basepath: "./public_media", apikey: "" };
+});
+cfg = require("file-distribute").config.override(argv, cfg);
+
+var node = require("file-distribute").node;
+node.configuration(cfg);
+node.connect();  
+node.initialize();
+
+var timeCfg = require("file-distribute").config.readOrMake("./config/nodetimings.json", function () { 
+  return { "seconds-between": 60.0, "connect-timeout": 15.0 };
+});
+
+var seconds = timeCfg["seconds-between"];
+var timeout = timeCfg["connect-timeout"];
+
+setInterval(function () {
+  node.connect();
+  setTimeout(function () {
+    node.disconnect();
+  }, timeout * 1000); 
+}, seconds * 1000);
+
 function normalizePort(val) {
   var port = parseInt(val, 10);
 
