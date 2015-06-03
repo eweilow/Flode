@@ -3,10 +3,16 @@ extends includes/layout.jade
 block content
   if reason
     h1= reason
-  form(action="/login", method="post")
+  form(action="/login", method="post").outerform
     if redirect
       input(type="hidden", name="redirect", value=redirect)
-    input(type="text", name="username")
-    input(type="password", name="password")
-    input(type="submit")
+    .input
+      h3 username
+      input(type="text", name="username", placeholder="username")
+    .input
+      h3 password
+      input(type="password", name="password",placeholder="password")
+    .input
+      br
+      input(type="submit")
   a(href="/register") Or, you can register.
