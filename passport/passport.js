@@ -177,11 +177,21 @@ module.exports.init = function (app, file) {
   app.use(passport.session());
   
   app.use(function (req, res, next) {
-    res.locals.user = req.user;
-    req.is = function (what) {
-      return req.user && req.user.roles && req.user.roles.indexOf(what) >= 0;
-    };
-    next();
+    if (!req.user) {
+      req.is = function (what) {  return false; }
+      return next();
+    }
+    
+    getUserById(req.user.id, function (err, user) {
+      if (err) return next(err);
+      
+      req.user = user;
+      res.locals.user = req.user;
+      req.is = function (what) {
+        return req.user && req.user.roles && req.user.roles.indexOf(what) >= 0;
+      };
+      next();
+    });
   })
   
   app.get('/login', function(req, res) {
@@ -205,7 +215,7 @@ module.exports.init = function (app, file) {
     res.render("users", { users: users });
   });
   
-  app.get("/users/:id/verify", function (req, res) {
+  app.get("/users/:id/verify", function (req, res, next) {
     if(!req.is("admin")) { return res.redirect("/users"); }
     
     if (!byId.hasOwnProperty(req.params.id)) {
@@ -220,10 +230,14 @@ module.exports.init = function (app, file) {
     }
     if(user.roles.indexOf("user") < 0) user.roles.push("user");
     
-    res.redirect("/users");
+    save(function (err) {
+      if (err) return next(err);
+      
+      res.redirect("/users");
+    });
   });
   
-  app.get("/users/:id/unverify", function (req, res) {
+  app.get("/users/:id/unverify", function (req, res, next) {
     if (!req.is("admin"))  { return res.redirect("/users"); }
     
     if (!byId.hasOwnProperty(req.params.id)) {
@@ -238,10 +252,14 @@ module.exports.init = function (app, file) {
     }
     if(user.roles.indexOf("unvalidated") < 0) user.roles.push("unvalidated");
     
-    res.redirect("/users");
+    save(function (err) {
+      if (err) return next(err);
+      
+      res.redirect("/users");
+    });
   });
   
-  app.get("/users/:id/delete", function (req, res) {
+  app.get("/users/:id/delete", function (req, res, next) {
     if (!req.is("admin"))  { return res.redirect("/users"); }
     
     if (!byId.hasOwnProperty(req.params.id)) {
@@ -250,7 +268,11 @@ module.exports.init = function (app, file) {
     var user = byId[req.params.id];
     users.splice(users.indexOf(user), 1);
     
-    res.redirect("/users");
+    save(function (err) {
+      if (err) return next(err);
+      
+      res.redirect("/users");
+    });
   });
   
   app.get('/logout', function(req, res) {
