@@ -10,7 +10,7 @@ block fullbody
       else 
         a(href="/login").user Log in
         
-    .wrapper
+    .wrapper.force
       ul.grid
         li.gridItem.green
           a(href="/upload")
@@ -22,13 +22,14 @@ block fullbody
             .inner
               img(src="/fontawesome/files-o.png").icon
               | #{lang.index.browse}
-        li.gridItem.orange
-          a(href="/user")
+        li.gridItem.orange(class=user?"":"disabled")
+          a(href=user?"/browse/user/"+user.id+"/node/local/":"/")
             .inner
               img(src="/fontawesome/user.png").icon
               | #{lang.index.user}
         li.gridItem.red
-          a(href="/settings")
-            .inner
-              img(src="/fontawesome/sliders.png").icon
-              | #{lang.index.settings}
+          .grid
+            a(href="/settings")
+              .inner
+                img(src="/fontawesome/sliders.png").icon
+                | #{lang.index.settings}

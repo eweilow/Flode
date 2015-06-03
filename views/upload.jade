@@ -1,23 +1,21 @@
 extends includes/layout.jade
 
 block content
-  form(enctype="multipart/form-data", action="/upload", method="post").outerform
-    .input
-      h3 Title
-      input(type="text", name="title", placeholder="Title", length=25)
-    .input
-      h3 Tags
-      input(type="text", name="tags", placeholder="Comma-separated tags", length=100)
-    .input
-      h3 Descriptions
-      textarea(type="text", name="descr", placeholder="Description", length=1000)
-    .input
-      h3 Date
-      
-      input(type="date", name="date", placeholder="From when is this?")
-    .input
-      h3 File
-      input(type="file", name="media")
-    .input
-      br
-      button(type="submit", value="Upload", name="submit") Submit
+  .wrapper.green
+    br
+    h1.nomargin.center Upload a file
+    form(enctype="multipart/form-data", action="/upload", method="post").outerform
+      .input
+        label(for="#title") Title
+        input(type="text", name="title", placeholder="Keep it nice and short!", length=25)#title
+      .input
+        label(for="#title") Tags
+        input(type="text", name="tags", placeholder="Comma-separated tags", length=100)#tags
+      .input
+        label(for="#descr") Description
+        textarea(type="text", name="descr", placeholder="What is this about?", length=1000)#descr
+      .input
+        label(for="#file") File
+        input(type="file", name="media")#file
+      .input
+        button(type="submit", value="Upload", name="submit") Submit
