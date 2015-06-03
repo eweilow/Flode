@@ -58,6 +58,12 @@ fs.watchFile('./config/language.json', function (curr, prev) {
 app.use(function (req, res, next) {
   res.locals.activePage = req.path;
   res.locals.lang = lang;
+  
+  res.locals.messages = req.session.messages;
+  req.session.messages = [];
+  res.message = function (str) {
+    req.session.messages.push(str);
+  };
   next();
 });
 
@@ -65,9 +71,33 @@ app.disable("etag");
 
 require("./passport/passport.js").init(app);
 
+var cfg = require("file-distribute").config.readOrMake("./config/defaultnode.json", function () { 
+  return { port: 8081, host: "localhost", segmentation: 10, basepath: "./public_media", apikey: "" };
+});
+cfg = require("file-distribute").config.override(argv, cfg);
+
+var node = require("file-distribute").node;
+node.configuration(cfg);
+node.connect();  
+node.initialize();
+
+var timeCfg = require("file-distribute").config.readOrMake("./config/nodetimings.json", function () { 
+  return { "seconds-between": 60.0, "connect-timeout": 15.0 };
+});
+
+var seconds = timeCfg["seconds-between"];
+var timeout = timeCfg["connect-timeout"];
+
+setInterval(function () {
+  node.connect();
+  setTimeout(function () {
+    node.disconnect();
+  }, timeout * 1000); 
+}, seconds * 1000);
+
 app.use('/', indexRoute);
 app.use('/upload', uploadRoute.router);
-app.use('/browse', browseRoute.router);
+app.use('/browse', browseRoute.router(app, node.repositories("offsite"), node.repositories("local")));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -164,30 +194,6 @@ var initWebsocket = function (httpServer) {
   });
 };
 
-var cfg = require("file-distribute").config.readOrMake("./config/defaultnode.json", function () { 
-  return { port: 8081, host: "localhost", segmentation: 10, basepath: "./public_media", apikey: "" };
-});
-cfg = require("file-distribute").config.override(argv, cfg);
-
-var node = require("file-distribute").node;
-node.configuration(cfg);
-node.connect();  
-node.initialize();
-
-var timeCfg = require("file-distribute").config.readOrMake("./config/nodetimings.json", function () { 
-  return { "seconds-between": 60.0, "connect-timeout": 15.0 };
-});
-
-var seconds = timeCfg["seconds-between"];
-var timeout = timeCfg["connect-timeout"];
-
-setInterval(function () {
-  node.connect();
-  setTimeout(function () {
-    node.disconnect();
-  }, timeout * 1000); 
-}, seconds * 1000);
-
 function normalizePort(val) {
   var port = parseInt(val, 10);
 
@@ -208,10 +214,12 @@ var http = require("http");
 var server = http.createServer(app);
 initWebsocket(server);
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(argv.serverport || 3000);
 app.set('port', port);
 
 server.listen(port);
+
+console.log("Listening on port", port);
 
 server.on('error', onError);
 server.on('listening', onListening);

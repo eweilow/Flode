@@ -1,0 +1,32 @@
+extends includes/layout.jade
+
+block content
+  if message
+    p= message
+    
+  table.usertable
+    thead
+      tr
+        td Phone number
+        td Name
+        td Verified
+        td Actions
+    tbody
+      -var sort = users
+      -sort.sort(function(a,b){return a.id - b.id});
+      each user in users
+        //p= JSON.stringify(user)
+        tr
+          -var validated = user.roles.indexOf("unvalidated") < 0
+          td= user.username + " " + user.id
+          td= user.name
+          td= validated ? "Yes" : "No"
+          td
+            if validated
+              a(href="/users/"+user.id+"/unverify") Unverify
+            else
+              a(href="/users/"+user.id+"/verify") Verify
+            br
+            a(href="/users/"+user.id+"/delete") Delete
+            br
+            a(href="/user/"+user.id+"/password/change") Change Password

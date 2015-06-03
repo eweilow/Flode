@@ -198,10 +198,60 @@ module.exports.init = function (app, file) {
       });
     })(req, res, next);
   });
-  /*app.post('/login', passport.authenticate('login', {
-    successRedirect: '/',
-    failureRedirect: '/login' }
-  ));*/
+  
+  app.get("/users", function (req, res) {
+    if (!req.is("admin")) { return res.render("invalidpermission", { message: "You need to be admin to do this" }); }
+    
+    res.render("users", { users: users });
+  });
+  
+  app.get("/users/:id/verify", function (req, res) {
+    if(!req.is("admin")) { return res.redirect("/users"); }
+    
+    if (!byId.hasOwnProperty(req.params.id)) {
+      return res.render("users", { users: users, message: "That user does not exists" });
+    }
+    var user = byId[req.params.id];
+    user = users[users.indexOf(user)];
+    
+    var index = user.roles.indexOf("unvalidated");
+    if (index >= 0) {
+      user.roles.splice(index, 1);
+    }
+    if(user.roles.indexOf("user") < 0) user.roles.push("user");
+    
+    res.redirect("/users");
+  });
+  
+  app.get("/users/:id/unverify", function (req, res) {
+    if (!req.is("admin"))  { return res.redirect("/users"); }
+    
+    if (!byId.hasOwnProperty(req.params.id)) {
+      return res.render("users", { users: users, message: "That user does not exists" });
+    }
+    var user = byId[req.params.id];
+    user = users[users.indexOf(user)];
+    
+    var index = user.roles.indexOf("users");
+    if (index >= 0) {
+      user.roles.splice(index, 1);
+    }
+    if(user.roles.indexOf("unvalidated") < 0) user.roles.push("unvalidated");
+    
+    res.redirect("/users");
+  });
+  
+  app.get("/users/:id/delete", function (req, res) {
+    if (!req.is("admin"))  { return res.redirect("/users"); }
+    
+    if (!byId.hasOwnProperty(req.params.id)) {
+      return res.render("users", { users: users, message: "That user does not exists" });
+    }
+    var user = byId[req.params.id];
+    users.splice(users.indexOf(user), 1);
+    
+    res.redirect("/users");
+  });
   
   app.get('/logout', function(req, res) {
     req.logout();

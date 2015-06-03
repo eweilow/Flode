@@ -15,25 +15,27 @@ var gm = require('gm');
 
 var path = require("path");
 
+var images = [".png", ".jpg"];
+
 router.post('/', function (req, res, next) {
   if (!req.is("user")) { return res.render('login', { reason: "You need to be logged in" }); }
-  //if(done==true){
   
   var filepath = req.files.media.name;
   var thumbpath = path.basename("thumb_" + filepath, path.extname(filepath)) + ".jpg";
-  files.push({ path: "/"+req.files.media.name, thumb: "/"+thumbpath, title: req.body.title, description: req.body.descr, date: req.body.date, tags: req.body.tags ? req.body.tags.split(",") : [ ] });
-  
-  fs.writeFileSync("./meta.json", JSON.stringify(files));
-    
-   var dir = "./public_media";
+  var manifestpath = path.basename(filepath, path.extname(filepath)) + ".manifest";
+
+  var dir = "./public_media";
 
   if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
-   }
+    fs.mkdirSync(dir);
+  }
   
   var file = path.resolve(path.join("./uploads", filepath));
-  var outfile = path.join("./public_media", filepath);
-  var thumb_outfile = path.join("./public_media", thumbpath);
+  var outfile = path.join(dir, filepath);
+  var thumb_outfile = path.join(dir, thumbpath);
+  var manifest_outfile = path.join(dir, manifestpath);
+  
+  fs.writeFileSync(manifest_outfile, JSON.stringify({ author: { username: req.user.username, id: req.user.id }, src: "/" + req.files.media.name, thumb: "/" + thumbpath, title: req.body.title, description: req.body.descr, date: req.body.date, tags: req.body.tags ? req.body.tags.split(",") : [] }));    
   
   console.log("Reading from", file);
   

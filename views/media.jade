@@ -6,7 +6,8 @@ mixin background(path)
 mixin media()
   .outer-wrapper
     if file.path.toLowerCase().indexOf(".png") > 0 || file.path.toLowerCase().indexOf(".jpg") > 0 || file.path.toLowerCase().indexOf(".bmp") > 0
-      +background(file.path)
+      .media
+        img(src=file.path)
     else if file.path.toLowerCase().indexOf(".mov") > 0
       .media
         video(controls).responsive-video
@@ -19,7 +20,14 @@ mixin media()
           Your browser does not like this video.
           
 block content
-  .container.row
-    .col.l6.m12.s12.offset-l3.topMargin.margin-l.z-depth-1.noPadding
-      +media()
+  a(href=file.path)
+    +media()
+  h1.center= file.title
+    br
+    sub(style="color: rgba(0,0,0,0.6); font-size: 1rem")
+      each tag in file.tags.slice(0,file.tags.length-1)
+        | #{tag}, 
+      | #{file.tags[file.tags.length-1]}
+  hr
+  p.center= file.description
     
