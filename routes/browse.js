@@ -49,11 +49,9 @@ module.exports.router = function (app, offsiterepositories, localrepository) {
       repository.getFileAsJson(req.params.filename, function (err, file) {
         if (err) return next(err);
         
-        repository.getFile(file.src, function (err, file2) {
-          res.render("media", { manifest: file, file: file2 });
-        });
+        res.render("media", { name: req.params.node, base: "/browse/node/" + req.params.node, manifest: file });
       });
-    } else return res.write(null).status(500).end();
+    } else return res.status(500).end();
   });
   
   router.get("/node/:node/raw/:filename", function (req, res, next) {

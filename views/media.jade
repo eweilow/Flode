@@ -5,29 +5,32 @@ mixin background(path)
   
 mixin media()
   .outer-wrapper
-    if file.path.toLowerCase().indexOf(".png") > 0 || file.path.toLowerCase().indexOf(".jpg") > 0 || file.path.toLowerCase().indexOf(".bmp") > 0
+    -var src = manifest.src.toLowerCase();
+    -var p = base + "/raw" + manifest.src;
+    if src.indexOf(".png") > 0 || src.indexOf(".jpg") > 0 || src.indexOf(".bmp") > 0 || src.indexOf("gif") > 0
       .media
-        img(src=file.path)
-    else if file.path.toLowerCase().indexOf(".mov") > 0
+        img(src=p)
+    else if src.indexOf(".mov") > 0
       .media
         video(controls).responsive-video
-          source(src=file.path, type="video/quicktime")
+          source(src=p, type="video/quicktime")
           Your browser does not like this video.
-    else if file.path.toLowerCase().indexOf(".mp4") > 0
+    else if src.indexOf(".mp4") > 0
       .media
         video(controls).responsive-video
-          source(src=file.path, type="video/mp4")
+          source(src=p, type="video/mp4")
           Your browser does not like this video.
           
 block content
-  a(href=file.path)
+  a(href=base) Back to #{name}
+  a(href=manifest.src)
     +media()
-  h1.center= file.title
+  h1.center= manifest.title
     br
     sub(style="color: rgba(0,0,0,0.6); font-size: 1rem")
-      each tag in file.tags.slice(0,file.tags.length-1)
+      each tag in manifest.tags.slice(0,manifest.tags.length-1)
         | #{tag}, 
-      | #{file.tags[file.tags.length-1]}
+      | #{manifest.tags[manifest.tags.length-1]}
   hr
-  p.center= file.description
+  p.center= manifest.description
     

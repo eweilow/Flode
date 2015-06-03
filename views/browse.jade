@@ -5,7 +5,7 @@ mixin background(path)
   
 mixin media(file,k)
   if file.src && file.manifestfile
-    a(href=activePage + file.manifestfile).waves-effect.waves-light.z-depth-1
+    a(href=activePage + "/" + file.manifestfile).waves-effect.waves-light.z-depth-1
       -var path = activePage + "/raw" + file.src
       if path.toLowerCase().indexOf(".png") > 0 || path.toLowerCase().indexOf(".jpg") > 0 || path.toLowerCase().indexOf(".bmp") > 0|| path.toLowerCase().indexOf(".gif") > 0
         +background(path)
@@ -23,7 +23,7 @@ mixin media(file,k)
 block content 
   if offsite
     each offsit in offsite
-      a(href=offsit.href)= offsit.title
+      a(href=offsit.href)= "Goto: " + offsit.title
       
   h1.center Media Gallery for #{node} 
   .mediagrid
