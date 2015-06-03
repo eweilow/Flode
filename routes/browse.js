@@ -70,13 +70,6 @@ module.exports.router = function (app, offsiterepositories, localrepository) {
       });
     } else return res.write(null).status(500).end();
   });
-
-  
-  /* GET upload page. */
-  router.get('/', function (req, res, next) {
-    var files = fs.existsSync("./meta.json") ? JSON.parse(fs.readFileSync("./meta.json")) : [];
-    res.render('browse.jade', { pagetitle: "Browse", files: files });
-  });
   
   return router;
 }
