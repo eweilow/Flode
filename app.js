@@ -41,11 +41,27 @@ var SessStore = require("./sessionstore")(session);
 app.use(session({ secret: "verytopsecret", saveUninitialized: true, resave: false, store: new SessStore({ directory: ".session" }) })); // Session middleware
 
 
+var lang = require("file-distribute").config.readOrMake("./config/language.json", function () { 
+  return { index: { upload: "Upload", browse: "Browse", user: "User", settings: "Settings" } };
+});
+
+fs.watchFile('./config/language.json', function (curr, prev) {
+  if (+curr.mtime === +prev.mtime) { }
+  else {
+    console.log("Reloaded language file");
+    lang = require("file-distribute").config.readOrMake("./config/language.json", function () { 
+      return { index: { upload: "Upload", browse: "Browse", user: "User", settings: "Settings" } };
+    });
+  }
+});
+
 app.use(function (req, res, next) {
   res.locals.activePage = req.path;
-  
+  res.locals.lang = lang;
   next();
 });
+
+app.disable("etag");
 
 require("./passport/passport.js").init(app);
 
