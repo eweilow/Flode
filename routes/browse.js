@@ -8,8 +8,10 @@ module.exports.router = function (app, offsiterepositories, localrepository) {
  
   router.get("/node/:node", function (req, res, next) {
     var repository = null;
+    var offsite = [{ href: "/browse/node/local", title: "local" }];
     if (req.params.node === "local") {
       repository = localrepository;
+      offsite = Object.keys(offsiterepositories).map(function (it) { return { href: it, title: it } });
     } else if (offsiterepositories.hasOwnProperty(req.params.node))  {
       repository = offsiterepositories[req.params.node];
     }
@@ -30,8 +32,7 @@ module.exports.router = function (app, offsiterepositories, localrepository) {
       func(files, 0, [], function (err, files) {
         if (err) return next(err);
         
-        console.log(files);        
-        res.render("browse.jade", { files: files, node: req.params.node});
+        res.render("browse.jade", { files: files, node: req.params.node, offsite: offsite});
       });
     });
   });

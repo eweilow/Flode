@@ -21,6 +21,10 @@ mixin media(file,k)
             Your browser does not like this video.
            
 block content 
+  if offsite
+    each offsit in offsite
+      a(href=offsit.href)= offsit.title
+      
   h1.center Media Gallery for #{node} 
   .mediagrid
     each file,k in files
