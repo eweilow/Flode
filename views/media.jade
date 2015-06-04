@@ -20,6 +20,17 @@ mixin media()
         video(controls).responsive-video
           source(src=p, type="video/mp4")
           Your browser does not like this video.
+    else
+        -var thumbs = { ".zip": "file-archive-o.png", ".mp3": "file-audio-o.png", ".txt": "file-text-o.png", ".doc": "file-word-o.png", ".docx": "file-word-o.png" }
+        -var found = false
+        for thumb, k in thumbs
+          if(src.indexOf(k) > 0)
+            -found = true
+            .icon
+              img(src="/fontawesome/" + thumb).disabled
+        unless found
+          .icon
+              img(src="/fontawesome/file-o.png").disabled
           
 block content
   .wrapper.blue
