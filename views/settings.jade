@@ -1,4 +1,10 @@
 extends includes/layout.jade
 
 block content
-  a(href="/users") Users
+  .wrapper.red
+    .card
+      header Actions
+      if admin
+        a(href="/users") View users
+      else 
+        p Nothing to do

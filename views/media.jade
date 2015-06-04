@@ -22,17 +22,39 @@ mixin media()
           Your browser does not like this video.
           
 block content
-  a(href=base) Back to #{name}
-  a(href=manifest.src)
-    +media()
-  h1.center= manifest.title
-    br
-    sub(style="color: rgba(0,0,0,0.6); font-size: 1rem")
-      each tag in manifest.tags.slice(0,manifest.tags.length-1)
-        | #{tag}, 
-      | #{manifest.tags[manifest.tags.length-1]}
-  hr
-  p.center= manifest.description
-  .center
-    a.center(href="/browse/user/"+manifest.author.id+"/node/local") More from user
+  .wrapper.blue
+    if offsite
+      ul.card.navigator
+        header Navigation
+        each offsit in offsite
+          li
+            a(href=offsit.href) #{offsit.title}
     
+    .card
+      a(href=manifest.src)
+        +media()
+      header.large.center= manifest.title
+        if manifest.tags && manifest.tags.length > 0
+          sub(style="color: rgba(0,0,0,0.6); font-size: 1rem")
+            | Tags: 
+            each tag in manifest.tags.slice(0,manifest.tags.length-1)
+              | #{tag}, 
+            | #{manifest.tags[manifest.tags.length-1]}
+      hr
+      if manifest.src
+        .infogroup
+          header File type
+          p= manifest.src.slice(manifest.src.lastIndexOf("."))
+      if manifest.author && manifest.author.username
+        .infogroup
+          header Author
+          p= manifest.author.username
+          
+      if manifest.description
+        .infogroup
+          header Description
+          p= manifest.description
+     
+      .center
+        a.center(href="/browse/user/"+manifest.author.id+"/node/local")= lang.media.moreuser
+        

@@ -228,7 +228,7 @@ h1 { font-weight: 300; }
 .outer-wrapper { .box-sizing(border-box); padding: 10px; width: 100%;text-align: center;  }
 .media { display: inline-block;
   * { max-width: 100%; max-height: 50%; }
-  &.icon { position: relative; width: 100%; height: 100%; img { position: absolute; max-height: 100%; width: 100%; height: 100%; }}
+  &.icon { background: #333; position: relative; width: 100%; height: 100%; img { position: absolute; max-height: 100%; width: 100%; height: 100%; }}
 }
 
 .usertable {
@@ -271,7 +271,6 @@ form {
   color: white;
   font-weight: 300;
   
-  padding: 5px 20px 20px 20px;
   .input {
     padding-top: 20px;
     padding-top: 20px;
@@ -310,5 +309,53 @@ form {
     display: block;
     font-size: 32px;
     padding-bottom: 5px;
+  }
+}
+
+.card {
+  
+  margin: 10px;
+  background: white;
+  padding: 20px;
+  background: white;
+  .rounded(4px);
+  &, * { color: black; }
+  a { color: #333; }
+  header {
+    font-weight: 300;
+    &.large { font-size: 32px; }
+    font-size: 24px;
+    margin-bottom: 3px;
+    
+    sub { display: block; color: #666; font-size: 0.6em; }
+  }
+}
+
+.navigator {
+  display: block;
+  list-style: none;
+  li {
+    display: inline-block;
+  }
+  li:not(:first-of-type):before {
+    content: "|"; 
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
+
+.tags { list-style: none; padding: 0; margin: 0; }
+
+.infogroup {
+  width: 100%;
+  margin: 20px 0 20px 0;
+  
+  header {
+    font-size: 22px;
+    font-weight: 300;
+    margin: 0;
+  }
+  p {
+    margin: 5px 0 0 0;
   }
 }

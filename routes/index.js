@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 
 /* GET home page. */
 router.get('/settings', function(req, res, next) {
-  res.render('settings.jade', { pagetitle: "Home" });
+  res.render('settings.jade', { pagetitle: "Home", admin: req.is("admin") });
 });
 
 

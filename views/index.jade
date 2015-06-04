@@ -3,12 +3,12 @@ extends includes/layout.jade
 block fullbody
   body.indexbody
     nav.indexnav
-      h1.title.center Flode
+      h1.title.center= lang.general.name
       if user
         .user= user.username + " | "
-          a(href="/logout") Log out
+          a(href="/logout")= lang.general.logout
       else 
-        a(href="/login").user Log in
+        a(href="/login").user= lang.general.login
         
     .wrapper.force
       ul.grid
@@ -22,11 +22,18 @@ block fullbody
             .inner
               img(src="/fontawesome/files-o.png").icon
               | #{lang.index.browse}
-        li.gridItem.orange(class=user?"":"disabled")
-          a(href=user?"/browse/user/"+user.id+"/node/local/":"/")
-            .inner
-              img(src="/fontawesome/user.png").icon
-              | #{lang.index.user}
+        if user
+          li.gridItem.orange
+            a(href="/browse/user/"+user.id+"/node/local")
+              .inner
+                img(src="/fontawesome/user.png").icon
+                | #{lang.index.user}
+        else
+          li.gridItem.disabled
+            a(href="/")
+              .inner
+                img(src="/fontawesome/user.png").icon
+                | #{lang.index.usernotloggedin}
         li.gridItem.red
           .grid
             a(href="/settings")

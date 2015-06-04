@@ -20,7 +20,7 @@ mixin media(file,k)
             source(src=path, type="video/mp4")
             Your browser does not like this video.
       else
-        -var thumbs = { ".zip": "file-archive-o.png", ".mp3": "file-audio-o.png", ".txt": "file-text-o.png" }
+        -var thumbs = { ".zip": "file-archive-o.png", ".mp3": "file-audio-o.png", ".txt": "file-text-o.png", ".doc": "file-word-o.png", ".docx": "file-word-o.png" }
         -var found = false
         for thumb, k in thumbs
           if(path.toLowerCase().indexOf(k) > 0)
@@ -33,16 +33,27 @@ mixin media(file,k)
            
 block content 
   .wrapper.blue
-    .remote.center
-      h3 Remote locations
-      if offsite
+    if offsite
+      ul.card.navigator
+        header Navigation
         each offsit in offsite
-          a(href=offsit.href)= "Goto: " + offsit.title
-        
-    h1.center Media Gallery for #{node} 
-    .mediagrid
-      each file,k in files
-        if file.src && file.manifestfile
-          .griditem
-            .wrapper
-              +media(file,k)
+          li
+            a(href=offsit.href) #{offsit.title}
+    
+    if tags
+      .card
+        header Tags
+        ul.tags
+          each files, t in tags 
+            li
+              a(href=activePage + "/tag/" + t.replace(/ /g, "%20").replace(/\//g, "%2F"))= t + " ("+files.length+")"
+    .card
+      header.large Gallery for '#{node}'
+        if tag
+          sub Tag: #{tag}
+      .mediagrid
+        each file,k in files
+          if file.src && file.manifestfile
+            .griditem
+              .wrapper
+                +media(file,k)

@@ -11,7 +11,7 @@ html(lang='en')
       script(src='/js/layout.js')
     
     block title
-      title Flode
+      title= lang.general.name
     block meta
     block css
     block js
@@ -20,15 +20,15 @@ html(lang='en')
     body.navbody
       block nav
         nav
-          a(href="/").title Flode
+          a(href="/").title= lang.general.name
           ul
             li
-              a(href="/browse/node/local") Browse
+              a(href="/browse/node/local")= lang.index.browse
             li
-              a(href="/upload") Upload
+              a(href="/upload")= lang.index.upload
           if user
             .user= user.username + " | "
-              a(href="/logout") Log out
+              a(href="/logout")= lang.general.logout
           else 
-            a(href="/login").user Log in
+            a(href="/login").user= lang.general.login
       block content
