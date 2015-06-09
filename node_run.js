@@ -1,5 +1,3 @@
-argv = require("optimist").string("admin").string("password").argv;
-
 var express = require('express');
 var session = require("express-session");
 var path = require('path');
@@ -159,7 +157,7 @@ app.set('port', port);
 
 server.listen(port);
 
-console.log("Listening on port", port);
+console.log("[Web server] Listening on port", port);
 
 server.on('error', onError);
 server.on('listening', onListening);
