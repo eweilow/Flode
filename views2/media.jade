@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  style.
+    img {max-width: 100%; margin: 5px; display: inline-block; }
+  
+  h1 Title: #{file.title}
+  p Description: #{file.description}
+  p(style="color: #555") Tags:
+    each tag in file.tags
+      span  #{tag}
+  
+  .row.files
+    if file.path.toLowerCase().indexOf(".png") > 0
+      img(src=file.path)
+    else if file.path.toLowerCase().indexOf(".jpg") > 0
+      img(src=file.path)
+    else if file.path.toLowerCase().indexOf(".bmp") > 0
+      img(src=file.path)
+    else if file.path.toLowerCase().indexOf(".mov") > 0
+      video(width="250", height="250", controls)
+        source(src=file.path, type="video/quicktime")
+        Your browser does not like this video.
+    else if file.path.toLowerCase().indexOf(".mp4") > 0
+      video( width="250", height="250", controls)
+        source(src=file.path, type="video/mp4")
+        Your browser does not like this video.
+   
+

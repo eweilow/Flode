@@ -1,0 +1,71 @@
+extends includes/layout.jade
+
+mixin background(path)
+  div(style="background-image: url('" + path + "')").media
+  
+mixin media()
+  .outer-wrapper
+    -var src = manifest.src.toLowerCase();
+    -var p = base + "/raw" + manifest.src;
+    if src.indexOf(".png") > 0 || src.indexOf(".jpg") > 0 || src.indexOf(".bmp") > 0 || src.indexOf("gif") > 0
+      .media
+        img(src=p)
+    else if src.indexOf(".mov") > 0
+      .media
+        video(controls).responsive-video
+          source(src=p, type="video/quicktime")
+          Your browser does not like this video.
+    else if src.indexOf(".mp4") > 0
+      .media
+        video(controls).responsive-video
+          source(src=p, type="video/mp4")
+          Your browser does not like this video.
+    else
+        -var thumbs = { ".zip": "file-archive-o.png", ".mp3": "file-audio-o.png", ".txt": "file-text-o.png", ".doc": "file-word-o.png", ".docx": "file-word-o.png" }
+        -var found = false
+        for thumb, k in thumbs
+          if(src.indexOf(k) > 0)
+            -found = true
+            .icon
+              img(src="/fontawesome/" + thumb).disabled
+        unless found
+          .icon
+              img(src="/fontawesome/file-o.png").disabled
+          
+block content
+  .wrapper.blue
+    if offsite
+      ul.card.navigator
+        header Navigation
+        each offsit in offsite
+          li
+            a(href=offsit.href) #{offsit.title}
+    
+    .card
+      a(href=manifest.src)
+        +media()
+      header.large.center= manifest.title
+        if manifest.tags && manifest.tags.length > 0
+          sub(style="color: rgba(0,0,0,0.6); font-size: 1rem")
+            | Tags: 
+            each tag in manifest.tags.slice(0,manifest.tags.length-1)
+              | #{tag}, 
+            | #{manifest.tags[manifest.tags.length-1]}
+      hr
+      if manifest.src
+        .infogroup
+          header File type
+          p= manifest.src.slice(manifest.src.lastIndexOf("."))
+      if manifest.author && manifest.author.username
+        .infogroup
+          header Author
+          p= manifest.author.username
+          
+      if manifest.description
+        .infogroup
+          header Description
+          p= manifest.description
+     
+      .center
+        a.center(href="/browse/user/"+manifest.author.id+"/node/local")= lang.media.moreuser
+        

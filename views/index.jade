@@ -1,0 +1,42 @@
+extends includes/layout.jade
+
+block fullbody
+  body.indexbody
+    nav.indexnav
+      h1.title.center= lang.general.name
+      if user
+        .user= user.username + " | "
+          a(href="/logout")= lang.general.logout
+      else 
+        a(href="/login").user= lang.general.login
+        
+    .wrapper.force
+      ul.grid
+        li.gridItem.green
+          a(href="/upload")
+            .inner
+              img(src="/fontawesome/cloud-upload.png").icon
+              | #{lang.index.upload}
+        li.gridItem.blue
+          a(href="/browse/node/local")
+            .inner
+              img(src="/fontawesome/files-o.png").icon
+              | #{lang.index.browse}
+        if user
+          li.gridItem.orange
+            a(href="/browse/user/"+user.id+"/node/local")
+              .inner
+                img(src="/fontawesome/user.png").icon
+                | #{lang.index.user}
+        else
+          li.gridItem.disabled
+            a(href="/")
+              .inner
+                img(src="/fontawesome/user.png").icon
+                | #{lang.index.usernotloggedin}
+        li.gridItem.red
+          .grid
+            a(href="/settings")
+              .inner
+                img(src="/fontawesome/sliders.png").icon
+                | #{lang.index.settings}

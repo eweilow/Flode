@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1 Upload!
+  br
+  form(enctype="multipart/form-data", action="/upload", method="post").col-lg-4.col-lg-offset-4
+    .form-group
+      input(type="text", name="title", placeholder="Title").form-control
+    .form-group
+      textarea(name="descr", placeholder="Description").form-control
+    .form-group
+      input(type="tags", name="tags", placeholder="Comma separated tags").form-control
+    .form-group
+      input(type="file", name="media")
+    button(type="submit", value="Upload", name="submit").btn.btn-default Submit

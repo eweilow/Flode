@@ -1,0 +1,23 @@
+extends includes/layout.jade
+
+block content
+  .wrapper.orange
+    if reason
+      .card
+        header= reason
+    .card
+      header.large Login
+      form(action="/login", method="post")
+        if redirect
+          input(type="hidden", name="redirect", value=redirect)
+        .input
+          h3 Username
+          input(type="text", name="username", placeholder="username")
+        .input
+          h3 Password
+          input(type="password", name="password",placeholder="password")
+        .input
+          br
+          input(type="submit")
+      br
+      a(href="/register") Or, you can register.

@@ -1,0 +1,22 @@
+extends includes/layout.jade
+
+block content
+  .wrapper.green
+    .card
+      //br
+      h1.nomargin.center Upload a file
+      form(enctype="multipart/form-data", action="/upload", method="post").outerform
+        .input
+          label(for="#title") Title
+          input(type="text", name="title", placeholder="Keep it nice and short!", length=25)#title
+        .input
+          label(for="#title") Tags
+          input(type="text", name="tags", placeholder="Comma-separated tags", length=100)#tags
+        .input
+          label(for="#descr") Description
+          textarea(type="text", name="descr", placeholder="What is this about?", length=1000)#descr
+        .input
+          label(for="#file") File
+          input(type="file", name="media")#file
+        .input
+          button(type="submit", value="Upload", name="submit") Submit

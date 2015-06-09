@@ -1,0 +1,23 @@
+extends includes/layout.jade
+
+block content
+  .wrapper.orange
+    if reason && reason.message
+      .card
+        header= reason.message
+    .card
+      header.large Register
+      form(action="/register", method="post").outerform
+        if redirect
+          input(type="hidden", name="redirect", value=redirect)
+        .input
+          h3 Phone number
+          input(type="text", name="username", pattern="\+\d+", value=username, required)
+        .input
+          h3 Password
+          input(type="password", name="password", value=password, required)
+        .input
+          h3 Name
+          input(type="text", name="name", value=name, required)
+        .input
+          input(type="submit")

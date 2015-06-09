@@ -1,0 +1,59 @@
+extends includes/layout.jade
+
+mixin background(path)
+  div(style="background-image: url('" + path + "')").media
+  
+mixin media(file,k)
+  if file.src && file.manifestfile
+    a(href=activePage + "/" + file.manifestfile).waves-effect.waves-light.z-depth-1
+      -var path = activePage + "/raw" + (file.thumb || file.src)
+      if path.toLowerCase().indexOf(".png") > 0 || path.toLowerCase().indexOf(".jpg") > 0 || path.toLowerCase().indexOf(".bmp") > 0|| path.toLowerCase().indexOf(".gif") > 0
+        +background(path)
+      else if path.toLowerCase().indexOf(".mov") > 0
+        .media
+          video(controls).responsive-video
+            source(src=path, type="video/quicktime")
+            Your browser does not like this video.
+      else if path.toLowerCase().indexOf(".mp4") > 0
+        .media
+          video(controls).responsive-video
+            source(src=path, type="video/mp4")
+            Your browser does not like this video.
+      else
+        -var thumbs = { ".zip": "file-archive-o.png", ".mp3": "file-audio-o.png", ".txt": "file-text-o.png", ".doc": "file-word-o.png", ".docx": "file-word-o.png" }
+        -var found = false
+        for thumb, k in thumbs
+          if(path.toLowerCase().indexOf(k) > 0)
+            -found = true
+            .media.icon
+              img(src="/fontawesome/" + thumb)
+        unless found
+          .media
+              img(src="/fontawesome/file-o.png")
+           
+block content 
+  .wrapper.blue
+    if offsite
+      ul.card.navigator
+        header Navigation
+        each offsit in offsite
+          li
+            a(href=offsit.href) #{offsit.title}
+    
+    if tags
+      .card
+        header Tags
+        ul.tags
+          each files, t in tags 
+            li
+              a(href=activePage + "/tag/" + t.replace(/ /g, "%20").replace(/\//g, "%2F"))= t + " ("+files.length+")"
+    .card
+      header.large Gallery for '#{node}'
+        if tag
+          sub Tag: #{tag}
+      .mediagrid
+        each file,k in files
+          if file.src && file.manifestfile
+            .griditem
+              .wrapper
+                +media(file,k)
